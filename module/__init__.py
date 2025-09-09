@@ -1,5 +1,14 @@
 import os
 import sys
+import time
+
+try:
+    if sys.platform != 'win32':
+        os.environ['TZ'] = 'Asia/Shanghai'
+        time.tzset()
+except Exception as e:
+    print(f'时区设置失败,请手动设置后重试,原因"{e}"')
+
 import logging
 import urllib3
 from rich.console import Console
