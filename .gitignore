@@ -1,0 +1,12 @@
+# ignore other files.
+*
+# include neceseary files.
+!main.py
+!module
+!module/handler.py
+!module/notify.py
+!module/signer.py
+!module/__init__.py
+!requirements.txt
+!.gitignore
+!LICENCE
