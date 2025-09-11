@@ -3,6 +3,8 @@
 # include neceseary files.
 !main.py
 !module
+!.github
+!.github/workflows
 !module/handler.py
 !module/notify.py
 !module/signer.py
@@ -10,5 +12,6 @@
 !module/stdio.py
 !config.py
 !requirements.txt
+!.github/workflows/sign.yml
 !.gitignore
 !LICENCE
