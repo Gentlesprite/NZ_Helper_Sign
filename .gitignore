@@ -7,6 +7,7 @@
 !module/notify.py
 !module/signer.py
 !module/__init__.py
+!module/stdio.py
 !requirements.txt
 !.gitignore
 !LICENCE

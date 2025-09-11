@@ -8,29 +8,25 @@ import os
 import sys
 
 from module import console
+from module.stdio import get_cookie, get_push_key
 from module.signer import NZSigner
 from module.handler import Handler
+from config import activity_id, flow_id, sd_id
 
 if __name__ == '__main__':
-    try:
-        from config import cookies, activity_id, flow_id, sd_id, push_key
-    except ImportError:
-        cookies = os.getenv('cookies')
-        activity_id = os.getenv('activity_id')
-        flow_id = os.getenv('flow_id')
-        sd_id = os.getenv('sd_id')
-        push_key = os.getenv('push_key')
-        if not all([cookies, activity_id, flow_id, sd_id]):
+    cookies = get_cookie()
+    push_key = get_push_key()
+    if not cookies:
+        cookies = os.getenv('COOKIES')
+        push_key = os.getenv('PUSH_KEY')
+        if not cookies:
             console.print(
                 '请配置以下环境变量或新建config.py设置以下变量后运行。\n'
                 '# Linux/macOS 设置教程:export 变量="your_cookie_value_here"\n'
                 '# Windows 设置教程:set 变量=your_cookie_value_here\n'
                 '需设置以下变量:\n'
-                'cookies\n'
-                'activity_id\n'
-                'flow_id\n'
-                'sd_id\n'
-                'push_key(可选)'
+                'COOKIES\n'
+                'PUSH_KEY(可选)\n'
             )
             sys.exit()
     try:
