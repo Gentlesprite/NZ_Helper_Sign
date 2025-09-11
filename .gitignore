@@ -8,6 +8,7 @@
 !module/signer.py
 !module/__init__.py
 !module/stdio.py
+!config.py
 !requirements.txt
 !.gitignore
 !LICENCE
