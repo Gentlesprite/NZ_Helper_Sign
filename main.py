@@ -16,10 +16,12 @@ from config import activity_id, flow_id, sd_id
 if __name__ == '__main__':
     cookies = get_cookie()
     push_key = get_push_key()
+    actions_flags = False
     if not cookies:
         cookies = os.getenv('COOKIES')
         push_key = os.getenv('PUSH_KEY')
         if not cookies:
+            actions_flags = True
             console.print(
                 '请配置以下环境变量或新建config.py设置以下变量后运行。\n'
                 '# Linux/macOS 设置教程:export 变量="your_cookie_value_here"\n'
@@ -30,13 +32,15 @@ if __name__ == '__main__':
             )
             sys.exit()
     try:
-        handler = Handler()
         signer = NZSigner(cookies=cookies, push_key=push_key)
         signer.sign(
             activity_id=activity_id,
             flow_id=flow_id,
             sd_id=sd_id
         )
+        if not actions_flags:
+            sys.exit()
+        handler = Handler()
         handler.task(
             func=signer.sign,
             activity_id=activity_id,
