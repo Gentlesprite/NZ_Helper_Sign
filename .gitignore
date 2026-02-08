@@ -7,6 +7,7 @@
 !.github/workflows
 !module/handler.py
 !module/notify.py
+!module/parser.py
 !module/signer.py
 !module/__init__.py
 !module/stdio.py
