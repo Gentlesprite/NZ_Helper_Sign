@@ -23,13 +23,18 @@ class Handler:
     @staticmethod
     def task(func: Callable, **kwargs):
         schedule_tables = [
-            '00:00'
+            '00:00:00'
         ]
         today = datetime.datetime.now().date()
         remain_do_time = []
         scheduler = sched.scheduler(time.time, time.sleep)
         for time_str in schedule_tables:
-            scheduled_time = datetime.datetime.strptime(f'{today} {time_str}', '%Y-%m-%d %H:%M')
+            # 根据时间字符串长度判断格式，兼容 HH:MM 和 HH:MM:SS。
+            if len(time_str.split(':')) == 2:
+                time_format = '%Y-%m-%d %H:%M'
+            else:
+                time_format = '%Y-%m-%d %H:%M:%S'
+            scheduled_time = datetime.datetime.strptime(f'{today} {time_str}', time_format)
             if scheduled_time < datetime.datetime.now():
                 scheduled_time += datetime.timedelta(days=1)
             delay = (scheduled_time - datetime.datetime.now()).total_seconds()
