@@ -90,6 +90,7 @@ class NZSigner:
 
             res = self.session.post(url, headers=headers, data=data, verify=False)
             response_data = res.json()
+            log.debug(response_data) if response_data else None
             sign_data = response_data.get('failedRet')
             if not isinstance(sign_data, dict):
                 return 0
@@ -201,11 +202,12 @@ class NZSigner:
         try:
             res = self.session.post(url, headers=headers, data=data, verify=False)
             response_data = res.json()
+            log.info(response_data) if response_data else None
             package_name = response_data.get('modRet', {}).get('jData', {}).get('sPackageName', '')
             p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:'
 
             if package_name:
-                p+=package_name
+                p += package_name
                 log.info(p)
                 console.log(p)
                 self.__process_notify(text=f'{cumulative_day_flow_id}累计签到礼包领取成功。', desp=package_name)
@@ -271,6 +273,7 @@ class NZSigner:
         try:
             res = self.session.post(url, headers=headers, data=data, verify=False)
             response_data = res.json()
+            log.info(response_data) if response_data else None
             package_name = response_data.get('modRet', {}).get('jData', {}).get('sPackageName', '')
             p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:'
 
@@ -347,19 +350,26 @@ class NZSigner:
         try:
             res = self.session.post(url, headers=headers, data=data, verify=False)
             response_data = res.json()
-            data_len = len(res.text)
-            if data_len == 361:  # 已签到。
-                p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:{response_data.get("msg")}'
-                log.info(p)
-                console.log(p)
-            elif data_len > 361:  # 签到成功。
-                package_name = response_data.get('modRet', {}).get('jData', {}).get('sPackageName', '')
-                p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:签到成功!{package_name}'
+            log.info(response_data) if response_data else None
+            package_name = response_data.get('modRet', {}).get('jData', {}).get('sPackageName', '')
+            p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:'
+            if package_name:
+                p += package_name
                 log.info(p)
                 console.log(p)
                 self.__process_notify(text='签到成功。', desp=package_name)
+                return None
+
+            msg = response_data.get('msg')
+
+            if msg:
+                p += msg
+                log.info(p)
+                console.log(p)
+                return None
+
             else:
-                p = f'{response_data},长度:{data_len}'
+                p = response_data
                 log.info(p)
                 console.log(p)
                 self.__process_notify(text='账号已失效。')
