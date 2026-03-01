@@ -30,7 +30,7 @@ if __name__ == '__main__':
         cookies = os.getenv('COOKIES')
         push_key = os.getenv('PUSH_KEY')
         if not cookies:
-            console.print(
+            console.log(
                 '请配置以下环境变量或新建config.py设置以下变量后运行。\n'
                 '# Linux/macOS 设置教程:export 变量="your_cookie_value_here"\n'
                 '# Windows 设置教程:set 变量=your_cookie_value_here\n'

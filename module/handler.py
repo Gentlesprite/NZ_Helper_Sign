@@ -41,8 +41,8 @@ class Handler:
             remain_do_time.append(delay)
         next_do_time = min(remain_do_time)
         scheduler.enter(next_do_time, 1, func, kwargs=kwargs)
-        p1 = f'开始执行任务,当前时间:{datetime.datetime.now()}'
-        p2 = f'距离下次执行任务还有%d:%02d:%02d' % (Handler.__to_hour_minute(next_do_time))
+        p1 = f'开始执行任务,当前时间:{datetime.datetime.now()}。'
+        p2 = f'距离下次执行任务还有%d:%02d:%02d。' % (Handler.__to_hour_minute(next_do_time))
         log.info(p1)
         log.info(p2)
         console.log(p1)

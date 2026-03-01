@@ -60,9 +60,9 @@ class NZSigner:
             current_date: str = str(datetime.now().date())
             if all((special_date, special_date_flow_id)):
                 if current_date in special_date:
-                    p = f'"{current_date}"在{special_date},开始限定日期礼包。'
+                    p = f'"{current_date}"在{special_date}限定日期列表中,开始领取限定日期礼包。'
                     log.info(p)
-                    console.print(p)
+                    console.log(p)
                     args[0].special_date_gift(
                         activity_id=kwargs.get('activity_id'),
                         special_date_flow_id=kwargs.get('special_date_flow_id'),
@@ -119,17 +119,17 @@ class NZSigner:
             if response_len == 4:  # 不在领取时间内。
                 p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:{response_data.get("msg")}'
                 log.info(p)
-                console.print(p)
+                console.log(p)
             elif response_len > 4:  # 限定日期礼包领取成功。
                 package_name = response_data.get('modRet', {}).get('jData', {}).get('sPackageName', '')
                 p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:限定日期礼包领取成功!{package_name}'
                 log.info(p)
-                console.print(p)
+                console.log(p)
                 self.__process_notify(text=f'{special_date}限定日期礼包领取成功。', desp=package_name)
             else:
                 p = f'{response_data},长度:{response_len}'
                 log.info(p)
-                console.print(p)
+                console.log(p)
                 self.__process_notify(text='账号已失效。')
         except Exception as e:
             log.error(f'签到请求失败: {e}')
@@ -186,17 +186,17 @@ class NZSigner:
             if response_len == 4:  # 已签到。
                 p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:{response_data.get("msg")}'
                 log.info(p)
-                console.print(p)
+                console.log(p)
             elif response_len > 4:  # 签到成功。
                 package_name = response_data.get('modRet', {}).get('jData', {}).get('sPackageName', '')
                 p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:签到成功!{package_name}'
                 log.info(p)
-                console.print(p)
+                console.log(p)
                 self.__process_notify(text='签到成功。', desp=package_name)
             else:
                 p = f'{response_data},长度:{response_len}'
                 log.info(p)
-                console.print(p)
+                console.log(p)
                 self.__process_notify(text='账号已失效。')
         except Exception as e:
             log.error(f'签到请求失败: {e}')
