@@ -62,11 +62,23 @@ def schedule_task(time_str: Union[str, list] = '00:00:00'):
                         remain_minutes = int(remaining_time // 60)
                         remain_seconds = int(remaining_time % 60)
 
+                        next_run_time_str = next_run.strftime('%H:%M:%S')
+
                         countdown_text = Text()
                         countdown_text.append(f'距离下次执行任务还有', style='white')
                         countdown_text.append(f'{remain_hours}:{remain_minutes:02d}:{remain_seconds:02d}',
                                               style='bold cyan')
-                        countdown_text.append(f'(将在{time_str_display}执行)', style='white')
+                        countdown_text.append('(将在', style='white')
+
+                        for i, t in enumerate(time_list):
+                            if t == next_run_time_str:
+                                countdown_text.append(t, style='bold cyan')
+                            else:
+                                countdown_text.append(t, style='white')
+                            if i < len(time_list) - 1:
+                                countdown_text.append('、', style='white')
+
+                        countdown_text.append('执行)', style='white')
 
                         panel = Panel(
                             countdown_text,
