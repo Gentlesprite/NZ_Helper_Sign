@@ -6,8 +6,7 @@
 import time
 import sched
 import datetime
-from functools import wraps
-from typing import Callable, Optional
+from typing import Callable
 
 from module import log, console
 
@@ -49,6 +48,7 @@ class Handler:
         console.log(p1)
         console.log(p2)
         scheduler.run()
+        Handler.task(func, **kwargs)
 
     @staticmethod
     def task_handler(func):
@@ -57,10 +57,8 @@ class Handler:
         """
 
         def inner(*args, **kwargs):
-            # 执行原函数
             result = func(*args, **kwargs)
             handler: Callable = kwargs.get('handler')
-            # 如果存在 handler，则调用它
             if handler:
                 handler(
                     func=func,

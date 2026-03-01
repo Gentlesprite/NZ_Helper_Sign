@@ -56,11 +56,16 @@ if __name__ == '__main__':
             sys.exit()
         handler = Handler()
         handler.task(
-            func=signer.sign,
-            activity_id=activity_id,
-            flow_id=flow_id,
-            sd_id=sd_id,
-            handler=handler.task
+            func=lambda: signer.sign(
+                activity_id=activity_id,
+                flow_id=flow_id,
+                sd_id=sd_id,
+                special_date=special_date,
+                special_date_flow_id=special_date_flow_id,
+                cumulative_day=cumulative_day,
+                cumulative_day_flow_id=cumulative_day_flow_id,
+                handler=None
+            )
         )
     except KeyboardInterrupt:
         console.log('键盘中断。')
