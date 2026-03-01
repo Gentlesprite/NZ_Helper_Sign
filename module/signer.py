@@ -20,8 +20,11 @@ from urllib.parse import (
 )
 
 from . import log, console
-from .notify import sc_send
-from .util import safe_index,schedule_task
+from .util import (
+    safe_index,
+    schedule_task,
+    sc_send
+)
 
 class NZSigner:
     def __init__(self, cookies: str, push_key: Union[str, None] = None):

@@ -9,6 +9,9 @@ from datetime import datetime
 from functools import wraps
 from typing import Callable, Union, Optional, Hashable
 
+import urllib.parse
+import urllib.request
+
 from rich.live import Live
 from rich.panel import Panel
 from rich.text import Text
@@ -26,6 +29,18 @@ def safe_index(
         return obj.index(value) + start
     except (ValueError, AttributeError):
         return None
+
+
+def sc_send(text, desp='', key='[SENDKEY]'):
+    try:
+        post_data = urllib.parse.urlencode({'text': text, 'desp': desp}).encode('utf-8')
+        url = f'https://sctapi.ftqq.com/{key}.send'
+        req = urllib.request.Request(url, data=post_data, method='POST')
+        with urllib.request.urlopen(req) as response:
+            result = response.read().decode('utf-8')
+        return result
+    except Exception as e:
+        log.error(f'推送失败!请检查key:{key}是否有效!原因:"{e}"')
 
 
 def schedule_task(time_str: Union[str, list] = '00:00:00'):

@@ -5,7 +5,6 @@
 !module
 !.github
 !.github/workflows
-!module/notify.py
 !module/parser.py
 !module/signer.py
 !module/__init__.py
