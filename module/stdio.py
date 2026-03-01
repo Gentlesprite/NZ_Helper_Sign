@@ -5,7 +5,7 @@
 # File:stdio.py
 import os
 
-from module import log
+from . import log
 
 
 def get_cookies():

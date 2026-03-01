@@ -20,11 +20,9 @@ from urllib.parse import (
     parse_qs
 )
 
-from module import log, console
-from module.handler import Handler
-from module.notify import sc_send
-from module.util import safe_index
-
+from . import log, console
+from .notify import sc_send
+from .util import safe_index,schedule_task
 
 class NZSigner:
     def __init__(self, cookies: str, push_key: Union[str, None] = None):
@@ -303,7 +301,7 @@ class NZSigner:
             self.__process_notify(text='领取限定日期礼包失败,请查看运行日志。')
             return None
 
-    @Handler.task_handler
+    @schedule_task('01:10:10')
     @check_current_date
     def sign(
             self,
@@ -313,8 +311,7 @@ class NZSigner:
             special_date: Optional[list] = None,
             special_date_flow_id: Optional[str] = None,
             cumulative_day: Optional[list] = None,
-            cumulative_day_flow_id: Optional[str] = None,
-            handler: Optional[Callable] = None
+            cumulative_day_flow_id: Optional[str] = None
     ):
         self.__update_cookies()
         current_timestamp = str(int(time.time()))

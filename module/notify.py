@@ -6,7 +6,7 @@
 import urllib.parse
 import urllib.request
 
-from module import log
+from . import log
 
 
 def sc_send(text, desp='', key='[SENDKEY]'):

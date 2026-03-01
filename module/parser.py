@@ -8,7 +8,7 @@ from argparse import (
     SUPPRESS
 )
 
-from module import (
+from . import (
     __version__,
     SOFTWARE_SHORT_NAME
 )
