@@ -6,13 +6,10 @@
 import os
 import sys
 
+from dotenv import load_dotenv
+
 from module import console
 from module.signer import NZSigner
-
-from module.stdio import (
-    get_cookies,
-    get_push_key
-)
 from config import (
     activity_id,
     flow_id,
@@ -24,21 +21,14 @@ from config import (
 )
 
 if __name__ == '__main__':
-    cookies = get_cookies()
-    push_key = get_push_key()
+    load_dotenv()
+    cookies = os.getenv('COOKIES')
+    push_key = os.getenv('PUSH_KEY')
     if not cookies:
-        cookies = os.getenv('COOKIES')
-        push_key = os.getenv('PUSH_KEY')
-        if not cookies:
-            console.log(
-                '请配置以下环境变量或新建config.py设置以下变量后运行。\n'
-                '# Linux/macOS 设置教程:export 变量="your_cookie_value_here"\n'
-                '# Windows 设置教程:set 变量=your_cookie_value_here\n'
-                '需设置以下变量:\n'
-                'COOKIES\n'
-                'PUSH_KEY(可选)\n'
-            )
-            sys.exit()
+        console.log('没有找到COOKIES,请配置环境变量。')
+        sys.exit(1)
+    if not push_key:
+        console.log('没有找到PUSH_KEY,领取信息不会进行推送。')
     try:
         signer = NZSigner(cookies=cookies, push_key=push_key)
         signer.sign(

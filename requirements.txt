@@ -2,3 +2,4 @@ requests==2.32.4
 urllib3==2.6.0
 rich==14.2.0
 schedule==1.2.2
+dotenv
