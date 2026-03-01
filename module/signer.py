@@ -113,7 +113,7 @@ class NZSigner:
             log.info(response_data) if response_data else None
             package_name = response_data.get('modRet', {}).get('jData', {}).get('sPackageName', '')
             p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:'
-
+            log.info(response_data)
             if package_name:
                 p += package_name
                 log.info(p)
@@ -231,6 +231,13 @@ class NZSigner:
             sign_count: int
     ):
         num = str(safe_index(obj=cumulative_day, value=sign_count, start=1))
+        log.info(
+            f'领取累计签到礼包,'
+            f'num:{num},'
+            f'flow_id:{cumulative_day_flow_id},'
+            f'sign_count:{sign_count},'
+            f'cumulative_day:{cumulative_day}。'
+        )
         self.request(
             activity_id=activity_id,
             flow_id=cumulative_day_flow_id,
@@ -247,7 +254,15 @@ class NZSigner:
             sd_id: str,
             special_date: Optional[list] = None
     ):
-        num = str(safe_index(obj=special_date, value=str(datetime.now().date()), start=1))
+        current_date = str(datetime.now().date())
+        num = str(safe_index(obj=special_date, value=current_date, start=1))
+        log.info(
+            f'领取限定日期礼包,'
+            f'num:{num},'
+            f'flow_id:{special_date_flow_id},'
+            f'current_date:{current_date},'
+            f'special_date:{special_date}。'
+        )
         self.request(
             activity_id=activity_id,
             flow_id=special_date_flow_id,
