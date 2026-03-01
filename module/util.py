@@ -9,7 +9,6 @@ from datetime import datetime
 from functools import wraps
 from typing import Callable, Union, Optional, Hashable
 
-from rich.console import Console as RichConsole
 from rich.live import Live
 from rich.panel import Panel
 from rich.text import Text
@@ -61,7 +60,8 @@ def schedule_task(time_str: str = '00:00:00'):
 
                         countdown_text = Text()
                         countdown_text.append(f'距离下次执行任务还有', style='white')
-                        countdown_text.append(f'{remain_hours}:{remain_minutes:02d}:{remain_seconds:02d}', style='bold cyan')
+                        countdown_text.append(f'{remain_hours}:{remain_minutes:02d}:{remain_seconds:02d}',
+                                              style='bold cyan')
                         countdown_text.append(f'(将在{time_str}执行)', style='white')
 
                         panel = Panel(
