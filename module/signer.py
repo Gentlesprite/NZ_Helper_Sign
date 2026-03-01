@@ -333,19 +333,19 @@ class NZSigner:
         try:
             res = self.session.post(url, headers=headers, data=data, verify=False)
             response_data = res.json()
-            response_len = len(response_data)
-            if response_len == 4:  # 已签到。
+            data_len = len(res.text)
+            if data_len == 361:  # 已签到。
                 p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:{response_data.get("msg")}'
                 log.info(p)
                 console.log(p)
-            elif response_len > 4:  # 签到成功。
+            elif data_len > 361:  # 签到成功。
                 package_name = response_data.get('modRet', {}).get('jData', {}).get('sPackageName', '')
                 p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:签到成功!{package_name}'
                 log.info(p)
                 console.log(p)
                 self.__process_notify(text='签到成功。', desp=package_name)
             else:
-                p = f'{response_data},长度:{response_len}'
+                p = f'{response_data},长度:{data_len}'
                 log.info(p)
                 console.log(p)
                 self.__process_notify(text='账号已失效。')
