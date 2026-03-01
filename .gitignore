@@ -8,7 +8,6 @@
 !module/parser.py
 !module/signer.py
 !module/__init__.py
-!module/stdio.py
 !module/util.py
 !config.py
 !requirements.txt
