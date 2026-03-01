@@ -21,6 +21,7 @@ from urllib.parse import (
 )
 
 from module import log, console
+from module.handler import Handler
 from module.notify import sc_send
 from module.util import safe_index
 
@@ -302,6 +303,7 @@ class NZSigner:
             self.__process_notify(text='领取限定日期礼包失败,请查看运行日志。')
             return None
 
+    @Handler.task_handler(handler=Handler.task)
     @check_current_date
     def sign(
             self,
@@ -377,14 +379,3 @@ class NZSigner:
             log.error(f'领取签到礼包请求失败,原因"{e}"')
             self.__process_notify(text='领取签到礼包请求失败,请查看运行日志。')
             return None
-        handler(
-            func=self.sign,
-            activity_id=activity_id,
-            flow_id=flow_id,
-            sd_id=sd_id,
-            special_date=special_date,
-            special_date_flow_id=special_date_flow_id,
-            cumulative_day=cumulative_day,
-            cumulative_day_flow_id=cumulative_day_flow_id,
-            handler=handler
-        ) if handler else None

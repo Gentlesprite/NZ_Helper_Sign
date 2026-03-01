@@ -6,7 +6,8 @@
 import time
 import sched
 import datetime
-from typing import Callable
+from functools import wraps
+from typing import Callable, Optional
 
 from module import log, console
 
@@ -48,3 +49,25 @@ class Handler:
         console.log(p1)
         console.log(p2)
         scheduler.run()
+
+    @staticmethod
+    def task_handler(handler: Optional[Callable]):
+        """
+        任务处理器装饰器，用于在函数执行后调用指定的 handler
+        """
+        def decorator(func: Callable):
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                # 执行原函数
+                result = func(*args, **kwargs)
+
+                # 如果存在 handler，则调用它
+                if handler:
+                    handler(
+                        func=func,
+                        **kwargs
+                    )
+
+                return result
+            return wrapper
+        return decorator
