@@ -201,19 +201,26 @@ class NZSigner:
         try:
             res = self.session.post(url, headers=headers, data=data, verify=False)
             response_data = res.json()
-            response_len = len(response_data)
-            if response_len == 4:  # 签到天数不够。
-                p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:{response_data.get("msg")}'
-                log.info(p)
-                console.log(p)
-            elif response_len > 4:  # 累计签到礼包领取成功。
-                package_name = response_data.get('modRet', {}).get('jData', {}).get('sPackageName', '')
-                p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:累计签到礼包领取成功!{package_name}'
+            package_name = response_data.get('modRet', {}).get('jData', {}).get('sPackageName', '')
+            p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:'
+
+            if package_name:
+                p+=package_name
                 log.info(p)
                 console.log(p)
                 self.__process_notify(text=f'{cumulative_day_flow_id}累计签到礼包领取成功。', desp=package_name)
+                return None
+
+            msg = response_data.get('msg')
+
+            if msg:
+                p += msg
+                log.info(p)
+                console.log(p)
+                return None
+
             else:
-                p = f'{response_data},长度:{response_len}'
+                p = response_data
                 log.info(p)
                 console.log(p)
                 self.__process_notify(text='账号已失效。')
@@ -264,19 +271,26 @@ class NZSigner:
         try:
             res = self.session.post(url, headers=headers, data=data, verify=False)
             response_data = res.json()
-            response_len = len(response_data)
-            if response_len == 4:  # 不在领取时间内。
-                p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:{response_data.get("msg")}'
-                log.info(p)
-                console.log(p)
-            elif response_len > 4:  # 限定日期礼包领取成功。
-                package_name = response_data.get('modRet', {}).get('jData', {}).get('sPackageName', '')
-                p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:限定日期礼包领取成功!{package_name}'
+            package_name = response_data.get('modRet', {}).get('jData', {}).get('sPackageName', '')
+            p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:'
+
+            if package_name:
+                p += package_name
                 log.info(p)
                 console.log(p)
                 self.__process_notify(text=f'{special_date}限定日期礼包领取成功。', desp=package_name)
+                return None
+
+            msg = response_data.get('msg')
+
+            if msg:
+                p += msg
+                log.info(p)
+                console.log(p)
+                return None
+
             else:
-                p = f'{response_data},长度:{response_len}'
+                p = response_data
                 log.info(p)
                 console.log(p)
                 self.__process_notify(text='账号已失效。')
