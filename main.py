@@ -18,7 +18,9 @@ from module.stdio import (
 from config import (
     activity_id,
     flow_id,
-    sd_id
+    sd_id,
+    special_date,
+    special_date_flow_id
 )
 
 if __name__ == '__main__':
@@ -42,7 +44,9 @@ if __name__ == '__main__':
         signer.sign(
             activity_id=activity_id,
             flow_id=flow_id,
-            sd_id=sd_id
+            sd_id=sd_id,
+            special_date=special_date,
+            special_date_flow_id=special_date_flow_id
         )
         if not PARSE_ARGS.loop:
             sys.exit()
