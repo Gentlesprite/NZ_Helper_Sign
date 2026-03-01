@@ -51,23 +51,22 @@ class Handler:
         scheduler.run()
 
     @staticmethod
-    def task_handler(handler: Optional[Callable]):
+    def task_handler(func):
         """
         任务处理器装饰器，用于在函数执行后调用指定的 handler
         """
-        def decorator(func: Callable):
-            @wraps(func)
-            def wrapper(*args, **kwargs):
-                # 执行原函数
-                result = func(*args, **kwargs)
 
-                # 如果存在 handler，则调用它
-                if handler:
-                    handler(
-                        func=func,
-                        **kwargs
-                    )
+        def inner(*args, **kwargs):
+            # 执行原函数
+            result = func(*args, **kwargs)
+            handler: Callable = kwargs.get('handler')
+            # 如果存在 handler，则调用它
+            if handler:
+                handler(
+                    func=func,
+                    **kwargs
+                )
 
-                return result
-            return wrapper
-        return decorator
+            return result
+
+        return inner

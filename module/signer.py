@@ -303,7 +303,7 @@ class NZSigner:
             self.__process_notify(text='领取限定日期礼包失败,请查看运行日志。')
             return None
 
-    @Handler.task_handler(handler=Handler.task)
+    @Handler.task_handler
     @check_current_date
     def sign(
             self,
