@@ -28,7 +28,7 @@ def safe_index(
         return None
 
 
-def schedule_task(time_str: str = '00:00:00'):
+def schedule_task(time_str: Union[str, list] = '00:00:00'):
     def decorator(func: Callable):
         @wraps(func)
         def inner(*args, **kwargs):
@@ -37,10 +37,14 @@ def schedule_task(time_str: str = '00:00:00'):
             if not PARSE_ARGS.loop:
                 return result
 
-            schedule.every().day.at(time_str).do(func, *args, **kwargs)
+            time_list = [time_str] if isinstance(time_str, str) else time_str
+
+            for t in time_list:
+                schedule.every().day.at(t).do(func, *args, **kwargs)
 
             p = f'开始执行循环任务,当前时间:{datetime.now()}。'
-            p2 = f'任务将在每天{time_str}执行。'
+            time_str_display = '、'.join(time_list)
+            p2 = f'任务将在每天{time_str_display}执行。'
             log.info(p)
             log.info(p2)
             console.log(p)
@@ -62,7 +66,7 @@ def schedule_task(time_str: str = '00:00:00'):
                         countdown_text.append(f'距离下次执行任务还有', style='white')
                         countdown_text.append(f'{remain_hours}:{remain_minutes:02d}:{remain_seconds:02d}',
                                               style='bold cyan')
-                        countdown_text.append(f'(将在{time_str}执行)', style='white')
+                        countdown_text.append(f'(将在{time_str_display}执行)', style='white')
 
                         panel = Panel(
                             countdown_text,
