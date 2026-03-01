@@ -301,7 +301,7 @@ class NZSigner:
             self.__process_notify(text='领取限定日期礼包失败,请查看运行日志。')
             return None
 
-    @schedule_task('01:10:10')
+    @schedule_task('00:00:00')
     @check_current_date
     def sign(
             self,
