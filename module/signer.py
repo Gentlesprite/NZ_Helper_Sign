@@ -131,7 +131,6 @@ class NZSigner:
             log.info(response_data) if response_data else None
             package_name = response_data.get('modRet', {}).get('jData', {}).get('sPackageName', '')
             p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:'
-            log.info(response_data)
             if package_name:
                 p += package_name
                 log.info(p)
