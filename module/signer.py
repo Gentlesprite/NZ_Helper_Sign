@@ -114,8 +114,7 @@ class NZSigner:
             sd_id: str,
             num: str,
             success_text: str,
-            error_prefix: str,
-            desp_text: Optional[str] = None
+            error_prefix: str
     ) -> bool:
         """发送请求并处理响应。"""
         self.update_cookies()
@@ -135,7 +134,7 @@ class NZSigner:
                 p += package_name
                 log.info(p)
                 console.log(p)
-                self.notify(text=success_text, desp=package_name if desp_text is None else desp_text)
+                self.notify(text=success_text, desp=package_name)
                 return True
 
             s_msg = response_data.get('flowRet', {}).get('sMsg')
