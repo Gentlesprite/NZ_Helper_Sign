@@ -233,7 +233,7 @@ class NZSigner:
             flow_id=self.cumulative_day_flow_id,
             sd_id=self.sd_id,
             num=num,
-            success_text=f'{self.cumulative_day_flow_id}累计签到礼包领取成功。',
+            success_text=f'累计签到{sign_count}天礼包领取成功。',
             error_prefix='领取累计签到礼包'
         )
 
@@ -252,7 +252,7 @@ class NZSigner:
             flow_id=self.special_date_flow_id,
             sd_id=self.sd_id,
             num=num,
-            success_text=f'{self.special_date}限定日期礼包领取成功。',
+            success_text=f'{current_date}限定日期礼包领取成功。',
             error_prefix='领取限定日期礼包'
         )
 
