@@ -140,6 +140,7 @@ class NZSigner:
             s_msg = response_data.get('flowRet', {}).get('sMsg')
 
             if s_msg and isinstance(s_msg, str):
+                s_msg = s_msg.strip('！')
                 p += f'{s_msg}。'
                 log.info(p)
                 console.log(p)
