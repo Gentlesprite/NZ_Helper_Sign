@@ -3,6 +3,7 @@
 # Software:PyCharm
 # Time:2025/9/9 14:30
 # File:signer.py
+import sys
 import time
 import random
 
@@ -176,6 +177,11 @@ class NZSigner:
             res = self.session.post(url, headers=self.headers, data=data, verify=False)
             response_data = res.json()
             log.debug(response_data) if response_data else None
+            if response_data.get('ret') == '301':
+                p: str = '活动已结束。'
+                console.log(p)
+                self.notify(text=p)
+                raise SystemExit(-1)
             sign_data = response_data.get('failedRet')
             if not isinstance(sign_data, dict):  # 最后一个礼包领取成功。
                 return self.cumulative_day[-1]
