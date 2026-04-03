@@ -136,6 +136,10 @@ class NZSigner:
             package_name = response_data.get('modRet', {}).get('jData', {}).get('sPackageName', '')
             p = f'[{token_params.get("roleName", "")}][{token_params.get("areaName", "")}]:'
             if package_name and isinstance(package_name, str):
+                try:
+                    package_name = package_name.encode('latin1').decode('utf8')
+                except (UnicodeDecodeError, UnicodeEncodeError):
+                    pass
                 p += package_name
                 log.info(p)
                 console.log(p)
