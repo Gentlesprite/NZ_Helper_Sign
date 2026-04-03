@@ -56,7 +56,7 @@ def mask_secret(
     if start_idx == end_idx or text_length <= 3:
         return text
 
-    # 返回隐藏后的字符串
+    # 返回隐藏后的字符串。
     return f'{text[:start_idx]}{"*" * (end_idx - start_idx)}{text[end_idx:]}'
 
 
