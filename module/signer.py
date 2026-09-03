@@ -269,6 +269,7 @@ class NZSigner:
                 p = f'签到活动已结束,签到任务已取消,请及时更新。'
                 log.info(p)
                 console.log(p)
+                self.notify(p)
                 return result
 
             if all((self.special_date, self.special_date_flow_id)):
@@ -356,6 +357,7 @@ class NZSigner:
             p = f'版本福利活动已结束,签到任务已取消,请及时更新。'
             log.info(p)
             console.log(p)
+            self.notify(p)
             return None
 
         if self.version_gfit_play_flow_id:
