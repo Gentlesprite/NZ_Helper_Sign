@@ -7,10 +7,7 @@ import time
 import random
 
 from functools import wraps
-from datetime import (
-    date,
-    datetime
-)
+from datetime import date
 from typing import (
     Union,
     Optional
@@ -58,7 +55,11 @@ class NZSigner:
         self.flow_id = flow_id
         self.push_key = push_key
         self.sd_id = sd_id
-        self.special_date = special_date
+        # 将限定日期统一转换为date对象，解析失败的保留None占位，避免后续num索引错位。
+        self.special_date = [parse_date(v) for v in special_date] if special_date else special_date
+        if self.special_date and None in self.special_date:
+            invalid: list = [v for v, d in zip(special_date, self.special_date) if d is None]
+            log.warning(f'限定日期列表中存在无效的日期:{invalid},已忽略。')
         self.special_date_flow_id = special_date_flow_id
         self.cumulative_day = cumulative_day
         self.cumulative_day_flow_id = cumulative_day_flow_id
@@ -262,10 +263,9 @@ class NZSigner:
             result = func(*args, **kwargs)
             self: NZSigner = args[0]
 
-            current_date: str = str(datetime.now().date())
-            format_current_date: date = parse_date(current_date)
-            format_end_date: date = parse_date(self.sign_gift_end_date)
-            if format_current_date >= format_end_date:
+            current_date: date = date.today()
+            end_date: date = parse_date(self.sign_gift_end_date)
+            if end_date and current_date >= end_date:
                 p = f'签到活动已结束,签到任务已取消,请及时更新。'
                 log.info(p)
                 console.log(p)
@@ -273,7 +273,8 @@ class NZSigner:
 
             if all((self.special_date, self.special_date_flow_id)):
                 if current_date in self.special_date:
-                    p = f'"{current_date}"在{self.special_date}限定日期列表中,开始领取限定日期礼包。'
+                    date_list: str = '、'.join(str(v) for v in self.special_date if v)
+                    p = f'"{current_date}"在[{date_list}]限定日期列表中,开始领取限定日期礼包。'
                     log.info(p)
                     console.log(p)
                     self.special_date_gift()
@@ -318,14 +319,15 @@ class NZSigner:
         )
 
     def special_date_gift(self):
-        current_date = str(datetime.now().date())
+        current_date: date = date.today()
         num = str(safe_index(obj=self.special_date, value=current_date, start=1))
+        date_list: str = '、'.join(str(v) for v in self.special_date if v)
         log.info(
             f'领取限定日期礼包,'
             f'num:{num},'
             f'flow_id:{self.special_date_flow_id},'
             f'current_date:{current_date},'
-            f'special_date:{self.special_date}。'
+            f'special_date:[{date_list}]。'
         )
         self.request(
             activity_id=self.activity_id,
@@ -347,11 +349,10 @@ class NZSigner:
         roll_records: list = []
         log.info(f'获取到版本福利礼包activity_id:"{self.version_gift_activity_id}"。')
 
-        current_date: str = str(datetime.now().date())
-        format_current_date: date = parse_date(current_date)
-        format_end_date: date = parse_date(self.version_gift_end_date)
+        current_date: date = date.today()
+        end_date: date = parse_date(self.version_gift_end_date)
 
-        if format_current_date >= format_end_date:
+        if end_date and current_date >= end_date:
             p = f'版本福利活动已结束,签到任务已取消,请及时更新。'
             log.info(p)
             console.log(p)

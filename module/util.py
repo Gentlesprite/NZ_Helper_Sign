@@ -75,10 +75,13 @@ def sc_send(text, desp='', key='[SENDKEY]'):
         log.error(f'推送失败!请检查key:{mask_secret(key)}是否有效!原因:"{e}"')
 
 
-def parse_date(date_str: str) -> date:
-    # 将日期字符串转换为date对象，月和日支持不补零。
-    year, month, day = (int(i) for i in date_str.strip().split('-'))
-    return date(year, month, day)
+def parse_date(date_str: str) -> Optional[date]:
+    # 将日期字符串转换为date对象，月和日支持不补零，解析失败时返回None。
+    try:
+        year, month, day = (int(i) for i in date_str.strip().split('-'))
+        return date(year, month, day)
+    except (ValueError, AttributeError):
+        return None
 
 
 def schedule_task(time_str: Union[str, list] = '00:00:00'):
