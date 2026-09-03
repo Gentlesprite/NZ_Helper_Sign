@@ -18,10 +18,12 @@ from config import (
     special_date_flow_id,
     cumulative_day,
     cumulative_day_flow_id,
+    sign_gift_end_date,
     version_gift_activity_id,
     version_gift_play_flow_id,
     version_gift_share_flow_id,
-    version_gift_flow_id
+    version_gift_flow_id,
+    version_gift_end_date
 )
 
 if __name__ == '__main__':
@@ -44,10 +46,12 @@ if __name__ == '__main__':
             special_date_flow_id=special_date_flow_id,
             cumulative_day=cumulative_day,
             cumulative_day_flow_id=cumulative_day_flow_id,
+            sign_gift_end_date=sign_gift_end_date,
             version_gift_activity_id=version_gift_activity_id,
             version_gift_play_flow_id=version_gift_play_flow_id,
             version_gift_share_flow_id=version_gift_share_flow_id,
-            version_gift_flow_id=version_gift_flow_id
+            version_gift_flow_id=version_gift_flow_id,
+            version_gift_end_date=version_gift_end_date
         )
         signer.sign()
     except KeyboardInterrupt:

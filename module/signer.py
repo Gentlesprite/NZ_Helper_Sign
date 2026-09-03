@@ -7,7 +7,10 @@ import time
 import random
 
 from functools import wraps
-from datetime import datetime
+from datetime import (
+    date,
+    datetime
+)
 from typing import (
     Union,
     Optional
@@ -22,9 +25,10 @@ from urllib.parse import (
 
 from . import log, console
 from .util import (
+    sc_send,
     safe_index,
-    schedule_task,
-    sc_send
+    parse_date,
+    schedule_task
 )
 
 
@@ -40,10 +44,12 @@ class NZSigner:
             special_date_flow_id: Optional[str] = None,
             cumulative_day: Optional[list] = None,
             cumulative_day_flow_id: Optional[str] = None,
+            sign_gift_end_date: Optional[str] = None,
             version_gift_activity_id: Optional[str] = None,
             version_gift_play_flow_id: Optional[str] = None,
             version_gift_share_flow_id: Optional[str] = None,
-            version_gift_flow_id: Optional[str] = None
+            version_gift_flow_id: Optional[str] = None,
+            version_gift_end_date: Optional[str] = None
     ):
         self.cookies = cookies
         self.session = requests.Session()
@@ -56,10 +62,12 @@ class NZSigner:
         self.special_date_flow_id = special_date_flow_id
         self.cumulative_day = cumulative_day
         self.cumulative_day_flow_id = cumulative_day_flow_id
+        self.sign_gift_end_date = sign_gift_end_date
         self.version_gift_activity_id = version_gift_activity_id
         self.version_gfit_play_flow_id = version_gift_play_flow_id
         self.version_gift_share_flow_id = version_gift_share_flow_id
         self.version_gift_flow_id = version_gift_flow_id
+        self.version_gift_end_date = version_gift_end_date
 
     def update_cookies(self):
         """更新会话的Cookies"""
@@ -253,7 +261,16 @@ class NZSigner:
         def inner(*args, **kwargs):
             result = func(*args, **kwargs)
             self: NZSigner = args[0]
+
             current_date: str = str(datetime.now().date())
+            format_current_date: date = parse_date(current_date)
+            format_end_date: date = parse_date(self.sign_gift_end_date)
+            if format_current_date >= format_end_date:
+                p = f'签到活动已结束,签到任务已取消,请及时更新。'
+                log.info(p)
+                console.log(p)
+                return result
+
             if all((self.special_date, self.special_date_flow_id)):
                 if current_date in self.special_date:
                     p = f'"{current_date}"在{self.special_date}限定日期列表中,开始领取限定日期礼包。'
@@ -329,6 +346,16 @@ class NZSigner:
 
         roll_records: list = []
         log.info(f'获取到版本福利礼包activity_id:"{self.version_gift_activity_id}"。')
+
+        current_date: str = str(datetime.now().date())
+        format_current_date: date = parse_date(current_date)
+        format_end_date: date = parse_date(self.version_gift_end_date)
+
+        if format_current_date >= format_end_date:
+            p = f'版本福利活动已结束,签到任务已取消,请及时更新。'
+            log.info(p)
+            console.log(p)
+            return None
 
         if self.version_gfit_play_flow_id:
             log.info(f'获取到版本福利每日完成一局游戏的flow_id:"{self.version_gfit_play_flow_id}"。')

@@ -5,9 +5,12 @@
 # File:util.py
 import time
 import schedule
-from datetime import datetime
 from functools import wraps
 from typing import Callable, Union, Optional, Hashable
+from datetime import (
+    date,
+    datetime
+)
 
 import urllib.parse
 import urllib.request
@@ -70,6 +73,12 @@ def sc_send(text, desp='', key='[SENDKEY]'):
         return result
     except Exception as e:
         log.error(f'推送失败!请检查key:{mask_secret(key)}是否有效!原因:"{e}"')
+
+
+def parse_date(date_str: str) -> date:
+    # 将日期字符串转换为date对象，月和日支持不补零。
+    year, month, day = (int(i) for i in date_str.strip().split('-'))
+    return date(year, month, day)
 
 
 def schedule_task(time_str: Union[str, list] = '00:00:00'):
