@@ -13,5 +13,6 @@
 !requirements.txt
 !pyproject.toml
 !.github/workflows/sign.yml
+!README.md
 !.gitignore
 !LICENCE
