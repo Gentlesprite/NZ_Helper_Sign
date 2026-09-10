@@ -20,4 +20,4 @@ version_gift_play_flow_id: Optional[str] = '1255107'  # 游玩一局礼包。
 version_gift_share_flow_id: str = str(
     int(version_gift_play_flow_id) + 1) if version_gift_play_flow_id else None  # 分享礼包。
 version_gift_flow_id: str = str(int(version_gift_play_flow_id) + 2) if version_gift_play_flow_id else None  # 抽奖。
-version_gift_end_date: str = '2026-09-06'
+version_gift_end_date: str = '2026-10-11'
