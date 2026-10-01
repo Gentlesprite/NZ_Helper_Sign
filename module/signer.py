@@ -30,6 +30,10 @@ from .util import (
 
 
 class NZSigner:
+    HOST: str = 'ams.game.qq.com'  # 默认AMS请求域名。
+    SUBDOMAIN: str = 'comm'  # 子域名前缀。
+    SIGN_SUBDOMAIN: str = 'x8m8'  # 签到的子域名前缀。
+
     def __init__(
             self,
             cookies: str,
@@ -86,15 +90,24 @@ class NZSigner:
     def notify(self, text, desp=''):
         sc_send(text=text, desp=desp, key=self.push_key) if self.push_key else None
 
-    def get_request_data(self, flow_id: str, num: str = '-1') -> dict:
-        """构造请求数据。"""
-        token_params = self.parse_token_params()
-        return {
+    def get_request_meta(
+            self,
+            activity_id: str,
+            flow_id: str,
+            sd_id: str,
+            num: str
+    ) -> tuple:
+        """根据实际情况，构造请求所需的data、url、headers。"""
+        __host = f'{self.SIGN_SUBDOMAIN}.{self.HOST}' if num == '-1' else f'{self.SUBDOMAIN}.{self.HOST}'
+        __token_params = self.parse_token_params()
+        __current_timestamp = str(int(time.time()))
+
+        data = {
             'appid': '1104904086',
             'num': num,
-            'userId': token_params.get('userId', ''),
-            'tokenId': token_params.get('token', ''),
-            'iActivityId': '',  # 由调用方填充。
+            'userId': __token_params.get('userId', ''),
+            'tokenId': __token_params.get('token', ''),
+            'iActivityId': activity_id,
             'iFlowId': flow_id,
             'g_tk': '1842395457',
             'e_code': '0',
@@ -105,18 +118,9 @@ class NZSigner:
             'sServiceDepartment': 'group_a',
             'sServiceType': 'nz'
         }
-
-    def get_request_url(self, activity_id: str, flow_id: str, sd_id: str) -> str:
-        """构造请求URL。"""
-        current_timestamp = str(int(time.time()))
-        token_params = self.parse_token_params()
-        return f'https://comm.ams.game.qq.com/ams/ame/amesvr?ameVersion=0.3&sServiceType=nz&iActivityId={activity_id}&sServiceDepartment=group_a&sSDID={sd_id}&sMiloTag=AMS-MILO-{activity_id}-{flow_id}-{token_params.get("userId", "")}-{current_timestamp + "287"}-0poxQT&_={current_timestamp + "288"}'
-
-    @property
-    def headers(self) -> dict:
-        """构造请求头。"""
-        return {
-            'Host': 'comm.ams.game.qq.com',
+        url = f'https://{__host}/ams/ame/amesvr?ameVersion=0.3&sServiceType=nz&iActivityId={activity_id}&sServiceDepartment=group_a&sSDID={sd_id}&sMiloTag=AMS-MILO-{activity_id}-{flow_id}-{__token_params.get("userId", "")}-{__current_timestamp + "287"}-0poxQT&_={__current_timestamp + "288"}'
+        headers = {
+            'Host': __host,
             'Accept': '*/*',
             'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -124,6 +128,7 @@ class NZSigner:
             'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 GH_QQConnect GameHelper_1008/3.15.30032.2103150032',
             'Referer': 'https://nz.qq.com/'
         }
+        return data, url, headers
 
     def request(
             self,
@@ -140,12 +145,10 @@ class NZSigner:
         self.update_cookies()
         token_params = self.parse_token_params()
 
-        data = self.get_request_data(flow_id, num)
-        data['iActivityId'] = activity_id
-        url = self.get_request_url(activity_id, flow_id, sd_id)
+        data, url, headers = self.get_request_meta(activity_id, flow_id, sd_id, num)
 
         try:
-            res = self.session.post(url, headers=self.headers, data=data, verify=False)
+            res = self.session.post(url, headers=headers, data=data, verify=False)
             response_data = res.json()
             self.check_ret(ret=response_data.get('ret'), raise_system_exit=False)
             log.info(response_data) if response_data else None
@@ -196,11 +199,14 @@ class NZSigner:
         try:
             self.update_cookies()
 
-            data = self.get_request_data(self.cumulative_day_flow_id, str(len(self.cumulative_day)))
-            data['iActivityId'] = self.activity_id
-            url = self.get_request_url(self.activity_id, self.cumulative_day_flow_id, self.sd_id)
+            data, url, headers = self.get_request_meta(
+                self.activity_id,
+                self.cumulative_day_flow_id,
+                self.sd_id,
+                str(len(self.cumulative_day))
+            )
 
-            res = self.session.post(url, headers=self.headers, data=data, verify=False)
+            res = self.session.post(url, headers=headers, data=data, verify=False)
             response_data = res.json()
             log.info(response_data) if response_data else None
             self.check_ret(ret=response_data.get('ret'), raise_system_exit=True)
