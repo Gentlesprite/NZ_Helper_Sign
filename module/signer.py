@@ -98,7 +98,7 @@ class NZSigner:
             num: str
     ) -> tuple:
         """根据实际情况，构造请求所需的data、url、headers。"""
-        __host = f'{self.SIGN_SUBDOMAIN}.{self.HOST}' if num == '-1' else f'{self.SUBDOMAIN}.{self.HOST}'
+        __host = f'{self.SIGN_SUBDOMAIN}.{self.HOST}' if num in ('-1', '6') else f'{self.SUBDOMAIN}.{self.HOST}'
         __token_params = self.parse_token_params()
         __current_timestamp = str(int(time.time()))
 
@@ -128,6 +128,7 @@ class NZSigner:
             'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 GH_QQConnect GameHelper_1008/3.15.30032.2103150032',
             'Referer': 'https://nz.qq.com/'
         }
+        log.info(f'data:{data}, url:{url}, headers:{headers}')
         return data, url, headers
 
     def request(
