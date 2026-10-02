@@ -98,7 +98,7 @@ class NZSigner:
             num: str
     ) -> tuple:
         """根据实际情况，构造请求所需的data、url、headers。"""
-        __host = f'{self.SIGN_SUBDOMAIN}.{self.HOST}' if num in ('-1', '6') else f'{self.SUBDOMAIN}.{self.HOST}'
+        __host = f'{self.SUBDOMAIN}.{self.HOST}' if num == '0' else f'{self.SIGN_SUBDOMAIN}.{self.HOST}'
         __token_params = self.parse_token_params()
         __current_timestamp = str(int(time.time()))
 
@@ -118,6 +118,7 @@ class NZSigner:
             'sServiceDepartment': 'group_a',
             'sServiceType': 'nz'
         }
+        data.pop('num') if num == '0' else None
         url = f'https://{__host}/ams/ame/amesvr?ameVersion=0.3&sServiceType=nz&iActivityId={activity_id}&sServiceDepartment=group_a&sSDID={sd_id}&sMiloTag=AMS-MILO-{activity_id}-{flow_id}-{__token_params.get("userId", "")}-{__current_timestamp + "287"}-0poxQT&_={__current_timestamp + "288"}'
         headers = {
             'Host': __host,
