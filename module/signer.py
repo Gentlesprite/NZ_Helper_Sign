@@ -31,8 +31,9 @@ from .util import (
 
 class NZSigner:
     HOST: str = 'ams.game.qq.com'  # 默认AMS请求域名。
-    SUBDOMAIN: str = 'comm'  # 子域名前缀。
+    SUBDOMAIN: str = 'comm'  # 默认子域名前缀,疑似已弃用。
     SIGN_SUBDOMAIN: str = 'x8m8'  # 签到的子域名前缀。
+    VERSION_GIFT_SUBDOMAIN: str = 'x8m8'  # 版本礼包的子域名前缀。
 
     def __init__(
             self,
@@ -98,7 +99,7 @@ class NZSigner:
             num: str
     ) -> tuple:
         """根据实际情况，构造请求所需的data、url、headers。"""
-        __host = f'{self.SUBDOMAIN}.{self.HOST}' if num == '0' else f'{self.SIGN_SUBDOMAIN}.{self.HOST}'
+        __host = f'{self.VERSION_GIFT_SUBDOMAIN}.{self.HOST}' if num == '0' else f'{self.SIGN_SUBDOMAIN}.{self.HOST}'
         __token_params = self.parse_token_params()
         __current_timestamp = str(int(time.time()))
 
