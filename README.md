@@ -4,7 +4,8 @@
 
 ## 一、抓取 `Cookie` 流程
 
-`Cookie` 是签到请求的身份凭证，需要先手动抓包获取，才能在 `Actions` 中使用。
+`Cookie` 是签到请求的身份凭证，需要先手动抓包获取，才能在 `Actions` 中使用。  
+具体教程点击跳转：[教程](https://github.com/Gentlesprite/NZ_Helper_Sign/issues/1)。
 
 1. 准备抓包工具：苹果设备推荐使用 `Stream`，电脑端推荐使用 `Burp Suite`，安卓用户请自行寻找可用的抓包工具。
 2. 打开逆战助手，**登录需要签到的账号**。
