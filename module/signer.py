@@ -32,7 +32,7 @@ from .util import (
 class NZSigner:
     HOST: str = 'ams.game.qq.com'  # 默认AMS请求域名。
     SUBDOMAIN: str = 'comm'  # 默认子域名前缀,疑似已弃用。
-    SIGN_SUBDOMAIN: str = 'x8m8'  # 签到的子域名前缀。
+    SIGN_SUBDOMAIN: str = 'x1m1'  # 签到的子域名前缀。
     VERSION_GIFT_SUBDOMAIN: str = 'x8m8'  # 版本礼包的子域名前缀。
 
     def __init__(
